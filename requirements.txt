@@ -7,3 +7,4 @@ python-multipart  # ファイルアップロード用
 # google-generativeai # 実際のGemini APIを使用する場合
 jinja2
 psycopg2-binary
+openai
