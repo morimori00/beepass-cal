@@ -29,12 +29,12 @@
                     <input type="text" id="nameFreeText" name="name_free_text">
                 </div>
                 <div>
-                    <label for="scheduleText">予定 (テキスト):</label>
-                    <textarea id="scheduleText" name="scheduleText" rows="4" placeholder="例: 5月20日 14時〜16時 会議
-または 毎週月曜日 9:00-10:30 定例"></textarea>
+                    <label for="scheduleText">テキスト:</label>
+                    <textarea id="scheduleText" name="scheduleText" rows="4" placeholder="例: 5月20日 14時〜16時 予定あり
+または 毎週月曜日 9:00-10:30など、ChatGPTがわかればなんでもOK"></textarea>
                 </div>
                 <div>
-                    <label for="scheduleImage">予定 (カレンダー画像など):</label>
+                    <label for="scheduleImage">予定 (Twin:te,カレンダー画像など複数可):</label>
                     <input type="file" id="scheduleImage" name="scheduleImage" accept="image/*" multiple>
                 </div>
                 <meta>twinteのスクショはダークモードだとうまく抽出できないのでライトモードのスクショを使ってください</meta>
@@ -61,7 +61,7 @@
 
             <div class="free-slots-section"> <!-- free-slots-infoから名前変更&ラップ -->
                 <div class="free-slots-header">
-                    <h3>空き時間</h3>
+                    <h3>メンバー全員が空いている時間</h3>
                     <!-- <button id="findFreeSlotsButton">選択メンバーで検索</button> -->
                 </div>
                 <div class="member-selection-for-free-slots">
@@ -71,7 +71,7 @@
                     </div>
                 </div>
                 <div class="duration-setting">
-                    <label for="durationMinutesInput">最小持続時間 (分):</label>
+                    <label for="durationMinutesInput">ミーティング時間 (分):</label>
                     <input type="number" id="durationMinutesInput" value="60" min="30" step="30">
                     <!-- value: 初期値, min: 最小値, step: 増減単位 -->
                 </div>
