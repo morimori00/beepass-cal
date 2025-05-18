@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>予定合わせアプリ</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="input-panel">
+            <h2>予定入力</h2>
+            <form id="scheduleForm">
+                <div>
+                    <label for="nameSelect">氏名:</label>
+                    <select id="nameSelect" name="name_select">
+                        <option value="">選択してください</option>
+                        <option value="笹川">笹川</option>
+                        <option value="作本">作本</option>
+                        <option value="浅野">浅野</option>
+                        <option value="ライル">ライル</option>
+                        <option value="栗林">栗林</option>
+                        <option value="森本">森本</option>
+                        <option value="free_text">自由記述</option>
+                    </select>
+                </div>
+                <div id="freeTextInputContainer" style="display: none;"> <!-- 初期状態は非表示 -->
+                    <label for="nameFreeText">氏名 (自由記述):</label>
+                    <input type="text" id="nameFreeText" name="name_free_text">
+                </div>
+                <div>
+                    <label for="scheduleText">予定 (テキスト):</label>
+                    <textarea id="scheduleText" name="scheduleText" rows="4" placeholder="例: 5月20日 14時〜16時 会議
+または 毎週月曜日 9:00-10:30 定例"></textarea>
+                </div>
+                <div>
+                    <label for="scheduleImage">予定 (カレンダー画像など):</label>
+                    <input type="file" id="scheduleImage" name="scheduleImage" accept="image/*" multiple>
+                </div>
+                <meta>twinteのスクショはダークモードだとうまく抽出できないのでライトモードのスクショを使ってください</meta>
+                <div class="form-actions">
+                    <button type="submit" id="submitButton">OK (登録)</button>
+                    <div class="loader" id="loader" style="display: none;"></div>
+                </div>
+            </form>
+            <div id="errorMessage" class="error-message"></div>
+        </div>
+
+        <!-- ... (display-panel は変更なし) ... -->
+        <div class="display-panel">
+            <h2>チームの予定</h2>
+            <div class="calendar-controls">
+                <button id="prevMonthBtn">< 前の月</button>
+                <span id="currentMonthYear"></span>
+                <button id="nextMonthBtn">次の月 ></button>
+            </div>
+            <div class="calendar-grid" id="calendarGrid">
+                <!-- カレンダーがここに表示される -->
+            </div>
+            
+
+            <div class="free-slots-section"> <!-- free-slots-infoから名前変更&ラップ -->
+                <div class="free-slots-header">
+                    <h3>空き時間</h3>
+                    <!-- <button id="findFreeSlotsButton">選択メンバーで検索</button> -->
+                </div>
+                <div class="member-selection-for-free-slots">
+                    <h4>対象メンバー:</h4>
+                    <div id="memberCheckboxListContainer">
+                        <!-- メンバーのチェックボックスがここに動的に追加される -->
+                    </div>
+                </div>
+                <div class="duration-setting">
+                    <label for="durationMinutesInput">最小持続時間 (分):</label>
+                    <input type="number" id="durationMinutesInput" value="60" min="30" step="30">
+                    <!-- value: 初期値, min: 最小値, step: 増減単位 -->
+                </div>
+                <div id="freeSlotsDisplay">
+                    <!-- 空き時間がここに表示される -->
+                </div>
+                <div class="loader" id="freeSlotsLoader" style="display: none;"></div> <!-- 空き時間検索用ローダー -->
+            </div>
+        </div>
+
+         <div id="deleteModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-button" id="closeModalButton">×</span>
+            <h2>予定の削除</h2>
+            <p><span id="deleteModalDateText"></span> の予定を削除します。</p>
+            <div>
+                <label for="deleteNameSelect">削除するメンバー:</label>
+                <select id="deleteNameSelect">
+                    <!-- オプションはJavaScriptで動的に追加 -->
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button id="confirmDeleteButton">削除実行</button>
+                <div class="loader" id="deleteLoader" style="display: none;"></div>
+            </div>
+            <div id="deleteModalErrorMessage" class="error-message"></div>
+        </div>
+    </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

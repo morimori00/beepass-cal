@@ -1,0 +1,522 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.container {
+    display: flex;
+    gap: 20px;
+}
+
+.input-panel {
+    width: 30%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.input-panel h2 {
+    margin-top: 0;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.input-panel div {
+    margin-bottom: 15px;
+}
+
+.input-panel label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.input-panel input[type="text"],
+.input-panel textarea,
+.input-panel input[type="file"] {
+    width: calc(100% - 22px); /* padding考慮 */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.input-panel button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.input-panel button:hover {
+    background-color: #0056b3;
+}
+
+.error-message {
+    color: red;
+    margin-top: 10px;
+}
+
+.display-panel {
+    width: 70%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.calendar-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#currentMonthYear {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7列 */
+    gap: 5px;
+    border: 1px solid #ddd;
+}
+
+.calendar-day {
+    border: 1px solid #eee;
+    padding: 8px;
+    min-height: 100px; /* 高さを確保 */
+    position: relative;
+}
+
+.calendar-day .date-number {
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+}
+
+.calendar-day .events-list {
+    font-size: 0.8em;
+    list-style: none;
+    padding-left: 0;
+}
+.calendar-day .events-list li {
+    /* background-color: #e0f7fa; /* デフォルトの色はコメントアウトまたは削除 */
+    /* color: #004d40; */
+    padding: 3px 5px;
+    margin-bottom: 3px;
+    border-radius: 3px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    /* border-left: 3px solid #00796b; /* これも色クラス側で定義 */
+}
+
+/* メンバーごとの色クラスの例 */
+.event-color-0 { background-color: #e0f2f7; color: #004c6d; border-left: 3px solid #0077c2; } /* 水色系 */
+.event-color-1 { background-color: #e8f5e9; color: #1b5e20; border-left: 3px solid #4caf50; } /* 緑系 */
+.event-color-2 { background-color: #fff3e0; color: #e65100; border-left: 3px solid #ff9800; } /* オレンジ系 */
+.event-color-3 { background-color: #fce4ec; color: #880e4f; border-left: 3px solid #e91e63; } /* ピンク系 */
+.event-color-4 { background-color: #ede7f6; color: #311b92; border-left: 3px solid #673ab7; } /* 紫系 */
+.event-color-5 { background-color: #e3f2fd; color: #0d47a1; border-left: 3px solid #2196f3; } /* 青系 */
+.event-color-6 { background-color: #fffde7; color: #f57f17; border-left: 3px solid #ffeb3b; } /* 黄色系 (文字色注意) */
+.event-color-7 { background-color: #f1f8e9; color: #33691e; border-left: 3px solid #8bc34a; } /* 明るい緑系 */
+.event-color-default { background-color: #f5f5f5; color: #424242; border-left: 3px solid #9e9e9e; } /* デフォルト/上記以上の場合 */
+
+.calendar-day.free-slot-highlight { /* 空き時間の強調表示 (仮) */
+    background-color: #d4edda; /* 薄い緑 */
+}
+.free-slots-info {
+    margin-top: 20px;
+}
+#freeSlotsDisplay {
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    overflow-y: auto;
+}
+#freeSlotsDisplay div {
+    padding: 5px 0;
+    border-bottom: 1px dashed #ddd;
+}
+#freeSlotsDisplay div:last-child {
+    border-bottom: none;
+}
+
+/* ... (既存のスタイル) ... */
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px; /* マス間の隙間を小さく */
+    border: 1px solid #ddd;
+    background-color: #ddd; /* 隙間の色 */
+}
+
+.calendar-day {
+    background-color: #fff; /* マスの背景色 */
+    border: none; /* 枠線はgridのgapで表現 */
+    padding: 5px; /* パディングを少し調整 */
+    min-height: 120px; /* マスの高さを確保 */
+    position: relative;
+    display: flex; /* flexboxを使って日付とイベントリストを配置 */
+    flex-direction: column; /* 縦方向に並べる */
+    overflow-y: auto; /* イベントが多い場合にスクロール */
+}
+
+.calendar-day.empty { /* 空のセル */
+    background-color: #f9f9f9;
+}
+
+.calendar-day.day-header { /* 曜日ヘッダーセル */
+    min-height: auto; /* 高さを自動に */
+    padding: 8px 5px;
+    text-align: center;
+    font-weight: bold;
+    background-color: #f0f0f0;
+}
+
+
+.calendar-day .date-number {
+    font-weight: bold;
+    font-size: 0.9em;
+    margin-bottom: 5px;
+    text-align: right; /* 日付番号を右上に */
+    color: #555;
+}
+
+.calendar-day .events-list {
+    font-size: 0.75em; /* 文字を少し小さく */
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+    flex-grow: 1; /* 残りのスペースを埋める */
+}
+
+
+
+.calendar-day .no-events { /* 予定がない場合のメッセージスタイル */
+    color: #aaa;
+    font-style: italic;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.calendar-day.has-free-slots .date-number { /* 空き時間がある日の日付番号 (例) */
+    /* background-color: #d4edda; */
+    /* border-radius: 50%; */
+    /* padding: 2px; */
+}
+
+
+.input-panel button { /* submitButton のスタイルとして流用 */
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease; /* ホバー効果のため */
+}
+
+.input-panel button:hover:not(:disabled) { /* 無効でない時だけホバー効果 */
+    background-color: #0056b3;
+}
+
+.input-panel button:disabled { /* 無効化されたボタンのスタイル */
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+}
+
+.form-actions { /* ボタンとローダーのコンテナ */
+    display: flex;
+    align-items: center; /* 縦方向中央揃え */
+    gap: 10px; /* ボタンとローダーの間隔 */
+}
+
+.loader {
+    border: 4px solid #f3f3f3; /* Light grey */
+    border-top: 4px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 24px; /* ボタンの高さに合わせるなど調整 */
+    height: 24px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 氏名選択のselect要素のスタイル (既存のinputと合わせる場合) */
+.input-panel select {
+    width: calc(100% - 22px); /* padding考慮 */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: white; /* selectの背景色 */
+    font-size: 1em; /* フォントサイズ調整 */
+}
+
+/* 自由記述欄のコンテナのマージン調整など */
+#freeTextInputContainer {
+    margin-bottom: 15px; /* 他のdivと同じマージン */
+}
+#freeTextInputContainer label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+#freeTextInputContainer input[type="text"] {
+    width: calc(100% - 22px);
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+
+.calendar-day {
+    /* ... (既存) ... */
+    position: relative; /* 削除ボタンを配置するため */
+}
+
+.calendar-day .date-number-container { /* 日付番号と削除ボタンを横並びにするコンテナ */
+    display: flex;
+    justify-content: space-between; /* 右端に削除ボタンを配置 */
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.calendar-day .date-number {
+    font-weight: bold;
+    font-size: 0.9em;
+    /* margin-bottom: 5px; */ /* date-number-container に移動 */
+    /* text-align: right; */ /* date-number-container で制御 */
+    color: #555;
+}
+
+.delete-day-button {
+    background: none;
+    border: none;
+    color: #ff4d4f; /* 赤系の色 */
+    cursor: pointer;
+    font-size: 0.8em; /* 少し小さめ */
+    padding: 2px 4px;
+    line-height: 1;
+    border-radius: 3px;
+}
+.delete-day-button:hover {
+    background-color: #fff2f0; /* 薄い赤背景 */
+}
+
+
+/* モーダルのスタイル */
+.modal {
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+    max-width: 400px; /* 最大幅 */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    position: relative;
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+}
+.modal-content p {
+    margin-bottom: 15px;
+}
+.modal-content label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+.modal-content select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.modal-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+.modal-actions button {
+    background-color: #dc3545; /* 削除ボタンは赤系 */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.modal-actions button:hover:not(:disabled) {
+    background-color: #c82333;
+}
+.modal-actions button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+/* 削除ローダーのスタイル (既存の .loader を流用可能) */
+#deleteLoader { /* IDセレクタで指定 */
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #dc3545; /* ローダーの色も赤系に */
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+}
+
+
+.free-slots-section {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+}
+
+.free-slots-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.free-slots-header h3 {
+    margin: 0;
+}
+
+#findFreeSlotsButton {
+    padding: 8px 12px;
+    background-color: #28a745; /* 緑系の色 */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+#findFreeSlotsButton:hover:not(:disabled) {
+    background-color: #218838;
+}
+#findFreeSlotsButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+
+.member-selection-for-free-slots {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #ccc;
+}
+.member-selection-for-free-slots h4 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 0.95em;
+    color: #333;
+}
+
+#memberCheckboxListContainer {
+    display: flex;
+    flex-wrap: wrap; /* メンバーが多い場合に折り返す */
+    gap: 10px; /* チェックボックス間の隙間 */
+}
+
+#memberCheckboxListContainer label {
+    display: flex; /* チェックボックスとラベルを揃える */
+    align-items: center;
+    font-size: 0.9em;
+    cursor: pointer;
+    padding: 3px 6px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+#memberCheckboxListContainer label:hover {
+    background-color: #f0f0f0;
+}
+
+#memberCheckboxListContainer input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+
+/* 空き時間検索用ローダー (既存の .loader を流用し、IDで色などを調整可能) */
+#freeSlotsLoader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #28a745; /* 検索ボタンに合わせた色 */
+    border-radius: 50%;
+    width: 20px; /* 少し小さめ */
+    height: 20px;
+    animation: spin 1s linear infinite;
+    margin: 10px auto; /* 中央寄せ */
+}
+
+.duration-setting {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.duration-setting label {
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #333;
+}
+
+.duration-setting input[type="number"] {
+    width: 70px; /* 幅を調整 */
+    padding: 6px 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 0.9em;
+}
